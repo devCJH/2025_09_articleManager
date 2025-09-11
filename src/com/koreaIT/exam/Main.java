@@ -36,7 +36,7 @@ public class Main {
 				
 				lastArticleId++;
 				
-				Article article = new Article(lastArticleId, Util.getDateStr(), title, body);
+				Article article = new Article(lastArticleId, Util.getDateStr(), Util.getDateStr(), title, body);
 				articles.add(article);
 				
 				System.out.println(lastArticleId + "번 게시글이 작성되었습니다");
@@ -49,7 +49,7 @@ public class Main {
 				System.out.println("번호	|	제목	|		작성일");
 				for (int i = articles.size() - 1; i >= 0; i--) {
 					Article article = articles.get(i);
-					System.out.printf("%d	|	%s	|	%s\n", article.id, article.title, article.regDate);
+					System.out.printf("%d	|	%s	|	%s\n", article.id, article.title, article.updateDate);
 				}
 			} else if (cmd.startsWith("article detail ")) {
 				String[] cmdBits = cmd.split(" ");
@@ -66,15 +66,77 @@ public class Main {
 				}
 				
 				if (foundArticle == null) {
-					System.out.println("게시글 없음");
+					System.out.printf("%d번 게시글이 존재하지 않습니다\n", id);
 					continue;
 				}
 				
 				System.out.printf("== %d번 게시글 상세보기 ==\n", id);
 				System.out.printf("번호 : %d\n", foundArticle.id);
 				System.out.printf("작성일 : %s\n", foundArticle.regDate);
+				System.out.printf("수정일 : %s\n", foundArticle.updateDate);
 				System.out.printf("제목 : %s\n", foundArticle.title);
 				System.out.printf("내용 : %s\n", foundArticle.body);
+			} else if (cmd.startsWith("article modify ")) {
+				String[] cmdBits = cmd.split(" ");
+
+				int id = Integer.parseInt(cmdBits[2]);
+				
+				Article foundArticle = null;
+				
+				for (Article article : articles) {
+					if (id == article.id) {
+						foundArticle = article;
+						break;
+					}
+				}
+				
+				if (foundArticle == null) {
+					System.out.printf("%d번 게시글이 존재하지 않습니다\n", id);
+					continue;
+				}
+				
+				System.out.printf("수정할 제목 : ");
+				String title = sc.nextLine();
+				System.out.printf("수정할 내용 : ");
+				String body = sc.nextLine();
+				
+				foundArticle.title = title;
+				foundArticle.body = body;
+				foundArticle.updateDate = Util.getDateStr();
+				
+				System.out.printf("%d번 게시글의 수정이 완료되었습니다\n", id);
+			} else if (cmd.startsWith("article delete ")) {
+				String[] cmdBits = cmd.split(" ");
+
+				int id = Integer.parseInt(cmdBits[2]);
+				
+				int foundIndex = -1;
+				
+				int i = 0;
+				for (Article article : articles) {
+					if (id == article.id) {
+						foundIndex = i;
+						break;
+					}
+					i++;
+				}
+				
+//				for (int i = 0; i < articles.size(); i++) {
+//					Article article = articles.get(i);
+//					if (id == article.id) {
+//						foundIndex = i;
+//						break;
+//					}
+//				}
+				
+				if (foundIndex == -1) {
+					System.out.printf("%d번 게시글이 존재하지 않습니다\n", id);
+					continue;
+				}
+				
+				articles.remove(foundIndex);
+				
+				System.out.printf("%d번 게시글을 삭제했습니다\n", id);
 			} else {
 				System.out.println("존재하지 않는 명령어 입니다");
 			}
@@ -87,12 +149,14 @@ public class Main {
 class Article {
 	int id;
 	String regDate;
+	String updateDate;
 	String title;
 	String body;
 	
-	public Article(int id, String regDate, String title, String body) {
+	public Article(int id, String regDate, String updateDate, String title, String body) {
 		this.id = id;
 		this.regDate = regDate;
+		this.updateDate = updateDate;
 		this.title = title;
 		this.body = body;
 	}

@@ -83,18 +83,14 @@ public class Main {
 					System.out.printf("%d	|	%s	|	%s\n", article.getId(), article.getTitle(), article.getUpdateDate());
 				}
 			} else if (cmd.startsWith("article detail ")) {
-				String[] cmdBits = cmd.split(" ");
-
-				int id = Integer.parseInt(cmdBits[2]);
+				int id = getCmdNum(cmd);
 				
-				Article foundArticle = null;
-				
-				for (Article article : articles) {
-					if (id == article.getId()) {
-						foundArticle = article;
-						break;
-					}
+				if (id == -1) {
+					System.out.println("게시글 번호를 정확하게 입력해주세요");
+					continue;
 				}
+				
+				Article foundArticle = getArticleById(id);
 				
 				if (foundArticle == null) {
 					System.out.printf("%d번 게시글이 존재하지 않습니다\n", id);
@@ -108,18 +104,14 @@ public class Main {
 				System.out.printf("제목 : %s\n", foundArticle.getTitle());
 				System.out.printf("내용 : %s\n", foundArticle.getBody());
 			} else if (cmd.startsWith("article modify ")) {
-				String[] cmdBits = cmd.split(" ");
-
-				int id = Integer.parseInt(cmdBits[2]);
+				int id = getCmdNum(cmd);
 				
-				Article foundArticle = null;
-				
-				for (Article article : articles) {
-					if (id == article.getId()) {
-						foundArticle = article;
-						break;
-					}
+				if (id == -1) {
+					System.out.println("게시글 번호를 정확하게 입력해주세요");
+					continue;
 				}
+				
+				Article foundArticle = getArticleById(id);
 				
 				if (foundArticle == null) {
 					System.out.printf("%d번 게시글이 존재하지 않습니다\n", id);
@@ -137,18 +129,14 @@ public class Main {
 				
 				System.out.printf("%d번 게시글의 수정이 완료되었습니다\n", id);
 			} else if (cmd.startsWith("article delete ")) {
-				String[] cmdBits = cmd.split(" ");
+				int id = getCmdNum(cmd);
 				
-				int id = Integer.parseInt(cmdBits[2]);
-
-				Article foundArticle = null;
-				
-				for (Article article : articles) {
-					if (id == article.getId()) {
-						foundArticle = article;
-						break;
-					}
+				if (id == -1) {
+					System.out.println("게시글 번호를 정확하게 입력해주세요");
+					continue;
 				}
+
+				Article foundArticle = getArticleById(id);
 				
 				if (foundArticle == null) {
 					System.out.printf("%d번 게시글이 존재하지 않습니다\n", id);
@@ -164,6 +152,29 @@ public class Main {
 		}
 		System.out.println("== 프로그램 종료 ==");
 		sc.close();
+	}
+
+	private static Article getArticleById(int id) {
+		for (Article article : articles) {
+			if (id == article.getId()) {
+				return article;
+			}
+		}
+		return null;
+	}
+
+	private static int getCmdNum(String cmd) {
+		String[] cmdBits = cmd.split(" ");
+		
+		try {
+			return Integer.parseInt(cmdBits[2]);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return -1;
+		} catch (NumberFormatException e) {
+			return -1;
+		} catch (Exception e) {
+			return -1;
+		}
 	}
 
 	private static void makeTestData() {

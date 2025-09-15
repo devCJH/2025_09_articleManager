@@ -5,16 +5,21 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.koreaIT.exam.dto.Article;
+import com.koreaIT.exam.dto.Member;
 import com.koreaIT.exam.util.Util;
 
 public class App {
 
 	private int lastArticleId;
+	private int lastMemberId;
 	private List<Article> articles;
+	private List<Member> members;
 
 	public App() {
 		this.lastArticleId = 0;
+		this.lastMemberId = 0;
 		this.articles = new ArrayList<>();
+		this.members = new ArrayList<>();
 	}
 
 	public void run() {
@@ -26,7 +31,7 @@ public class App {
 
 		while (true) {
 			System.out.printf("명령어) ");
-			String cmd = sc.nextLine();
+			String cmd = sc.nextLine().trim();
 
 			if (cmd.equals("exit")) {
 				break;
@@ -37,11 +42,82 @@ public class App {
 				continue;
 			}
 
-			if (cmd.equals("article write")) {
-				System.out.printf("제목 : ");
-				String title = sc.nextLine();
+			if (cmd.equals("member join")) {
+				
+				String loginId = null;
+				String loginPw = null;
+				String name = null;
+				
+				while (true) {
+					System.out.printf("아이디 : ");
+					loginId = sc.nextLine().trim();
+					
+					if (loginId.length() == 0) {						
+						System.out.println("아이디는 필수 입력 정보입니다");
+						continue;
+					}
+
+					boolean isLoginIdDup = false;
+					
+					for (Member member : members) {
+						if (member.getLoginId().equals(loginId)) {
+							isLoginIdDup = true;
+							break;
+						}
+					}
+					
+					if (isLoginIdDup) {
+						System.out.printf("[ %s ]은(는) 이미 사용중인 아이디입니다\n", loginId);
+						continue;
+					}
+					
+					System.out.printf("[ %s ]은(는) 사용 가능한 아이디입니다\n", loginId);
+					break;
+				}
+				
+				while(true) {
+					System.out.printf("비밀번호 : ");
+					loginPw = sc.nextLine().trim();
+					
+					if (loginPw.length() == 0) {
+						System.out.println("비밀번호는 필수 입력 정보입니다");
+						continue;
+					}
+					
+					System.out.printf("비밀번호 확인 : ");
+					String loginPwChk = sc.nextLine().trim();
+					
+					if (loginPw.equals(loginPwChk) == false) {
+						System.out.println("비밀번호가 일치하지 않습니다");
+						continue;
+					}
+					
+					break;
+				}
+				
+				while (true) {
+					System.out.printf("이름 : ");
+					name = sc.nextLine().trim();
+					
+					if (name.length() == 0) {
+						System.out.println("이름은 필수 입력 정보입니다");
+						continue;
+					}
+					
+					break;
+				}
+
+				this.lastMemberId++;
+				
+				Member member = new Member(this.lastMemberId, Util.getDateStr(), Util.getDateStr(), loginId, loginPw, name);
+				this.members.add(member);
+				
+				System.out.printf("[ %s ]님의 가입이 완료되었습니다\n", loginId);
+			} else if (cmd.equals("article write")) {
+				System.out.println("제목을 입력하세요");
+				String title = sc.nextLine().trim();
 				System.out.printf("내용 : ");
-				String body = sc.nextLine();
+				String body = sc.nextLine().trim();
 
 				this.lastArticleId++;
 
@@ -120,9 +196,9 @@ public class App {
 				}
 
 				System.out.printf("수정할 제목 : ");
-				String title = sc.nextLine();
+				String title = sc.nextLine().trim();
 				System.out.printf("수정할 내용 : ");
-				String body = sc.nextLine();
+				String body = sc.nextLine().trim();
 
 				foundArticle.setTitle(title);
 				foundArticle.setBody(body);

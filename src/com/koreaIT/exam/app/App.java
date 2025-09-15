@@ -4,19 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.koreaIT.exam.controller.ArticleController;
 import com.koreaIT.exam.controller.MemberController;
 import com.koreaIT.exam.dto.Article;
 import com.koreaIT.exam.util.Util;
 
 public class App {
-
-	private int lastArticleId;
-	private List<Article> articles;
-
-	public App() {
-		this.lastArticleId = 0;
-		this.articles = new ArrayList<>();
-	}
 
 	public void run() {
 		System.out.println("== 프로그램 시작 ==");
@@ -24,8 +17,9 @@ public class App {
 		Scanner sc = new Scanner(System.in);
 
 		MemberController memberController = new MemberController(sc);
+		ArticleController articleController = new ArticleController(sc);
 		
-		this.makeTestData();
+		articleController.makeTestData();
 
 		while (true) {
 			System.out.printf("명령어) ");
@@ -43,17 +37,7 @@ public class App {
 			if (cmd.equals("member join")) {
 				memberController.doJoin();
 			} else if (cmd.equals("article write")) {
-				System.out.println("제목을 입력하세요");
-				String title = sc.nextLine().trim();
-				System.out.printf("내용 : ");
-				String body = sc.nextLine().trim();
-
-				this.lastArticleId++;
-
-				Article article = new Article(this.lastArticleId, Util.getDateStr(), Util.getDateStr(), title, body);
-				this.articles.add(article);
-
-				System.out.println(this.lastArticleId + "번 게시글이 작성되었습니다");
+				articleController.doWrite();
 			} else if (cmd.startsWith("article list")) {
 
 				if (this.articles.size() == 0) {
@@ -180,14 +164,6 @@ public class App {
 			return -1;
 		} catch (Exception e) {
 			return -1;
-		}
-	}
-
-	private void makeTestData() {
-		System.out.println("테스트용 게시글 데이터 5개를 생성했습니다");
-		for (int i = 1; i <= 5; i++) {
-			this.lastArticleId++;
-			this.articles.add(new Article(this.lastArticleId, Util.getDateStr(), Util.getDateStr(), "제목" + i, "내용" + i));
 		}
 	}
 }

@@ -2,6 +2,7 @@ package com.koreaIT.exam.service;
 
 import java.util.List;
 
+import com.koreaIT.exam.container.Container;
 import com.koreaIT.exam.dao.ArticleDao;
 import com.koreaIT.exam.dto.Article;
 
@@ -10,11 +11,11 @@ public class ArticleService {
 	private ArticleDao articleDao;
 	
 	public ArticleService() {
-		this.articleDao = new ArticleDao();
+		this.articleDao = Container.articleDao;
 	}
 	
-	public int writeArticle(String regDate, String updateDate, String title, String body) {
-		return this.articleDao.writeArticle(regDate, updateDate, title, body);
+	public int writeArticle(String regDate, String updateDate, int memberId, String title, String body) {
+		return this.articleDao.writeArticle(regDate, updateDate, memberId, title, body);
 	}
 
 	public List<Article> getArticles() {

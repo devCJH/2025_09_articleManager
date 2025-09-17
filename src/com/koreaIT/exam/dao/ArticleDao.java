@@ -16,10 +16,10 @@ public class ArticleDao {
 		this.articles = new ArrayList<>();
 	}
 
-	public int writeArticle(String regDate, String updateDate, String title, String body) {
+	public int writeArticle(String regDate, String updateDate, int memberId, String title, String body) {
 		this.lastArticleId++;
 
-		Article article = new Article(this.lastArticleId, regDate, updateDate, title, body);
+		Article article = new Article(this.lastArticleId, regDate, updateDate, memberId, title, body);
 		this.articles.add(article);
 
 		return this.lastArticleId;
@@ -63,7 +63,7 @@ public class ArticleDao {
 		for (int i = 1; i <= 5; i++) {
 			this.lastArticleId++;
 			this.articles
-					.add(new Article(this.lastArticleId, Util.getDateStr(), Util.getDateStr(), "제목" + i, "내용" + i));
+					.add(new Article(this.lastArticleId, Util.getDateStr(), Util.getDateStr(), (int) (Math.random() * 3 + 1), "제목" + i, "내용" + i));
 		}
 	}
 }

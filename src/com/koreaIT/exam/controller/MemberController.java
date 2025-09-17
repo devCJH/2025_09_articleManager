@@ -2,6 +2,7 @@ package com.koreaIT.exam.controller;
 
 import java.util.Scanner;
 
+import com.koreaIT.exam.container.Container;
 import com.koreaIT.exam.dto.Member;
 import com.koreaIT.exam.service.MemberService;
 import com.koreaIT.exam.util.Util;
@@ -9,11 +10,11 @@ import com.koreaIT.exam.util.Util;
 public class MemberController {
 	private Scanner sc;
 	private MemberService memberService;
-	private int loginedMemberId;
+	public static int loginedMemberId;
 	
 	public MemberController(Scanner sc) {
 		this.sc = sc;
-		this.memberService = new MemberService();
+		this.memberService = Container.memberService;
 		loginedMemberId = -1;
 	}
 
@@ -80,7 +81,7 @@ public class MemberController {
 	}
 
 	public void doLogin() {
-		if (this.loginedMemberId != -1) {
+		if (loginedMemberId != -1) {
 			System.out.println("이미 로그인 되어 있습니다");
 			return;
 		}
@@ -102,35 +103,23 @@ public class MemberController {
 			return;
 		}
 		
-		this.loginedMemberId = member.getId();
+		loginedMemberId = member.getId();
 		
 		System.out.printf("[ %s ] 님 환영합니다~\n", member.getLoginId());
 	}
 
 	public void doLogout() {
-		if (this.loginedMemberId == -1) {
+		if (loginedMemberId == -1) {
 			System.out.println("이미 로그아웃 상태입니다");
 			return;
 		}
 		
-		this.loginedMemberId = -1;
+		loginedMemberId = -1;
 		System.out.println("정상적으로 로그아웃 되었습니다");
 	}
+
+	public void makeTestData() {
+		this.memberService.makeTestData();
+		System.out.println("테스트용 회원 데이터 5개를 생성했습니다");
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

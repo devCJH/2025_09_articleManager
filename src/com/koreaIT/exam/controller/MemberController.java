@@ -2,16 +2,19 @@ package com.koreaIT.exam.controller;
 
 import java.util.Scanner;
 
+import com.koreaIT.exam.dto.Member;
 import com.koreaIT.exam.service.MemberService;
 import com.koreaIT.exam.util.Util;
 
 public class MemberController {
 	private Scanner sc;
 	private MemberService memberService;
+	private int loginedMemberId;
 	
 	public MemberController(Scanner sc) {
 		this.sc = sc;
 		this.memberService = new MemberService();
+		loginedMemberId = -1;
 	}
 
 	public void doJoin() {
@@ -75,4 +78,59 @@ public class MemberController {
 		
 		System.out.printf("[ %s ]님의 가입이 완료되었습니다\n", loginId);
 	}
+
+	public void doLogin() {
+		if (this.loginedMemberId != -1) {
+			System.out.println("이미 로그인 되어 있습니다");
+			return;
+		}
+		
+		System.out.printf("아이디 : ");
+		String loginId = sc.nextLine().trim();
+		System.out.printf("비밀번호 : ");
+		String loginPw = sc.nextLine().trim();
+		
+		if (loginId.length() == 0 || loginPw.length() == 0) {
+			System.out.println("아이디 or 비밀번호를 입력하세요");
+			return;
+		}
+		
+		Member member = this.memberService.getMemberByLoginIdAndLoginPw(loginId, loginPw);
+		
+		if (member == null) {
+			System.out.println("아이디 or 비밀번호가 일치하지 않습니다");
+			return;
+		}
+		
+		this.loginedMemberId = member.getId();
+		
+		System.out.printf("[ %s ] 님 환영합니다~\n", member.getLoginId());
+	}
+
+	public void doLogout() {
+		if (this.loginedMemberId == -1) {
+			System.out.println("이미 로그아웃 상태입니다");
+			return;
+		}
+		
+		this.loginedMemberId = -1;
+		System.out.println("정상적으로 로그아웃 되었습니다");
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

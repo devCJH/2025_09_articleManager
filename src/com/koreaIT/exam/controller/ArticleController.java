@@ -3,25 +3,22 @@ package com.koreaIT.exam.controller;
 import java.util.List;
 import java.util.Scanner;
 
-import com.koreaIT.exam.container.Container;
 import com.koreaIT.exam.dto.Article;
 import com.koreaIT.exam.service.ArticleService;
-import com.koreaIT.exam.service.MemberService;
+import com.koreaIT.exam.session.Session;
 import com.koreaIT.exam.util.Util;
 
 public class ArticleController {
 	private Scanner sc;
 	private ArticleService articleService;
-	private MemberService memberService;
 
 	public ArticleController(Scanner sc) {
 		this.sc = sc;
-		this.articleService = Container.articleService;
-		this.memberService = Container.memberService;
+		this.articleService = new ArticleService();
 	}
 
 	public void doWrite() {
-		if (MemberController.loginedMemberId == -1) {
+		if (Session.isLogined() == false) {
 			System.out.println("로그인을 해야만 사용할 수 있는 기능입니다");
 			return;
 		}
@@ -32,7 +29,7 @@ public class ArticleController {
 		String body = sc.nextLine().trim();
 
 		int id = this.articleService.writeArticle(Util.getDateStr(), Util.getDateStr(),
-				MemberController.loginedMemberId, title, body);
+				Session.getLoginedMemberId(), title, body);
 
 		System.out.println(id + "번 게시글이 작성되었습니다");
 	}
@@ -64,7 +61,7 @@ public class ArticleController {
 		for (int i = printArticles.size() - 1; i >= 0; i--) {
 			Article article = printArticles.get(i);
 			
-			String writerName = this.memberService.getWriterName(article.getMemberId());
+			String writerName = this.articleService.getWriterName(article.getMemberId());
 			
 			System.out.printf("%d	|	%s	|	%s	|	%s\n", article.getId(), article.getTitle(),
 					writerName, article.getUpdateDate());
@@ -86,7 +83,7 @@ public class ArticleController {
 			return;
 		}
 
-		String writerName = this.memberService.getWriterName(foundArticle.getMemberId());
+		String writerName = this.articleService.getWriterName(foundArticle.getMemberId());
 		
 		System.out.printf("== %d번 게시글 상세보기 ==\n", id);
 		System.out.printf("번호 : %d\n", foundArticle.getId());

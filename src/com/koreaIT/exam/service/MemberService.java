@@ -1,6 +1,5 @@
 package com.koreaIT.exam.service;
 
-import com.koreaIT.exam.container.Container;
 import com.koreaIT.exam.dao.MemberDao;
 import com.koreaIT.exam.dto.Member;
 
@@ -9,7 +8,7 @@ public class MemberService {
 	private MemberDao memberDao;
 	
 	public MemberService() {
-		this.memberDao = Container.memberDao;
+		this.memberDao = new MemberDao();
 	}
 	
 	public boolean isLoginIdDup(String loginId) {
@@ -26,10 +25,6 @@ public class MemberService {
 
 	public Member getMemberByLoginId(String loginId) {
 		return this.memberDao.getMemberByLoginId(loginId);
-	}
-
-	public String getWriterName(int loginedMemberId) {
-		return this.memberDao.getWriterName(loginedMemberId);
 	}
 
 	public void makeTestData() {

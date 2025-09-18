@@ -1,8 +1,8 @@
 package com.koreaIT.exam.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import com.koreaIT.exam.db.InsteadDB;
 import com.koreaIT.exam.dto.Member;
 import com.koreaIT.exam.util.Util;
 
@@ -13,7 +13,7 @@ public class MemberDao {
 	
 	public MemberDao() {
 		this.lastMemberId = 0;
-		this.members = new ArrayList<>();
+		this.members = InsteadDB.members;
 	}
 	
 	public boolean isLoginIdDup(String loginId) {
@@ -45,15 +45,6 @@ public class MemberDao {
 		for (Member member : this.members) {
 			if (member.getLoginId().equals(loginId)) {
 				return member;
-			}
-		}
-		return null;
-	}
-
-	public String getWriterName(int loginedMemberId) {
-		for (Member member : this.members) {
-			if (loginedMemberId == member.getId()) {
-				return member.getLoginId();
 			}
 		}
 		return null;

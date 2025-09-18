@@ -2,20 +2,18 @@ package com.koreaIT.exam.controller;
 
 import java.util.Scanner;
 
-import com.koreaIT.exam.container.Container;
 import com.koreaIT.exam.dto.Member;
 import com.koreaIT.exam.service.MemberService;
+import com.koreaIT.exam.session.Session;
 import com.koreaIT.exam.util.Util;
 
 public class MemberController {
 	private Scanner sc;
 	private MemberService memberService;
-	public static int loginedMemberId;
 	
 	public MemberController(Scanner sc) {
 		this.sc = sc;
-		this.memberService = Container.memberService;
-		loginedMemberId = -1;
+		this.memberService = new MemberService();
 	}
 
 	public void doJoin() {
@@ -81,7 +79,7 @@ public class MemberController {
 	}
 
 	public void doLogin() {
-		if (loginedMemberId != -1) {
+		if (Session.isLogined()) {
 			System.out.println("이미 로그인 되어 있습니다");
 			return;
 		}
@@ -103,18 +101,19 @@ public class MemberController {
 			return;
 		}
 		
-		loginedMemberId = member.getId();
+		Session.login(member.getId());
 		
 		System.out.printf("[ %s ] 님 환영합니다~\n", member.getLoginId());
 	}
 
 	public void doLogout() {
-		if (loginedMemberId == -1) {
+		if (Session.isLogined() == false) {
 			System.out.println("이미 로그아웃 상태입니다");
 			return;
 		}
 		
-		loginedMemberId = -1;
+		Session.logout();
+		
 		System.out.println("정상적으로 로그아웃 되었습니다");
 	}
 

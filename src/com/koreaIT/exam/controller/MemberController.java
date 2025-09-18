@@ -16,6 +16,23 @@ public class MemberController {
 		this.memberService = new MemberService();
 	}
 
+	public void doAction(String methodName) {
+		switch (methodName) {
+		case "join":
+			this.doJoin();
+			break;
+		case "login":
+			this.doLogin();
+			break;
+		case "logout":
+			this.doLogout();
+			break;
+		default:
+			System.out.println("존재하지 않는 명령어 입니다");
+			break;
+		}
+	}
+	
 	public void doJoin() {
 		String loginId = null;
 		String loginPw = null;

@@ -16,7 +16,7 @@ public class ArticleController {
 		this.sc = sc;
 		this.articleService = new ArticleService();
 	}
-
+	
 	public void doWrite() {
 		if (Session.isLogined() == false) {
 			System.out.println("로그인을 해야만 사용할 수 있는 기능입니다");

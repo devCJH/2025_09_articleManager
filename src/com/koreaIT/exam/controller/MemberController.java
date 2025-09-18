@@ -7,8 +7,7 @@ import com.koreaIT.exam.service.MemberService;
 import com.koreaIT.exam.session.Session;
 import com.koreaIT.exam.util.Util;
 
-public class MemberController {
-	private Scanner sc;
+public class MemberController extends Controller {
 	private MemberService memberService;
 	
 	public MemberController(Scanner sc) {
@@ -16,7 +15,8 @@ public class MemberController {
 		this.memberService = new MemberService();
 	}
 
-	public void doAction(String methodName) {
+	@Override
+	public void doAction(String methodName, String cmd) {
 		switch (methodName) {
 		case "join":
 			this.doJoin();
@@ -132,10 +132,5 @@ public class MemberController {
 		Session.logout();
 		
 		System.out.println("정상적으로 로그아웃 되었습니다");
-	}
-
-	public void makeTestData() {
-		this.memberService.makeTestData();
-		System.out.println("테스트용 회원 데이터 5개를 생성했습니다");
 	}
 }

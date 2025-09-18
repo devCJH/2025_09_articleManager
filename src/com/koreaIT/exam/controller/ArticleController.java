@@ -8,13 +8,39 @@ import com.koreaIT.exam.service.ArticleService;
 import com.koreaIT.exam.session.Session;
 import com.koreaIT.exam.util.Util;
 
-public class ArticleController {
-	private Scanner sc;
+public class ArticleController extends Controller {
 	private ArticleService articleService;
 
 	public ArticleController(Scanner sc) {
 		this.sc = sc;
 		this.articleService = new ArticleService();
+		this.cmd = null;
+	}
+	
+	@Override
+	public void doAction(String methodName, String cmd) {
+		this.cmd = cmd;
+		
+		switch (methodName) {
+		case "write":
+			this.doWrite();
+			break;
+		case "list":
+			this.showList();
+			break;
+		case "detail":
+			this.showDetail();
+			break;
+		case "modify":
+			this.doModify();
+			break;
+		case "delete":
+			this.doDelete();
+			break;
+		default:
+			System.out.println("존재하지 않는 명령어 입니다");
+			break;
+		}
 	}
 	
 	public void doWrite() {
@@ -34,7 +60,7 @@ public class ArticleController {
 		System.out.println(id + "번 게시글이 작성되었습니다");
 	}
 
-	public void showList(String cmd) {
+	public void showList() {
 		List<Article> articles = this.articleService.getArticles();
 
 		if (articles.size() == 0) {
@@ -42,7 +68,7 @@ public class ArticleController {
 			return;
 		}
 
-		String searchKeyword = this.articleService.getSearchKeywordByCmd(cmd);
+		String searchKeyword = this.articleService.getSearchKeywordByCmd(this.cmd);
 
 		List<Article> printArticles = articles;
 
@@ -68,8 +94,8 @@ public class ArticleController {
 		}
 	}
 
-	public void showDetail(String cmd) {
-		int id = this.articleService.getCmdNum(cmd);
+	public void showDetail() {
+		int id = this.articleService.getCmdNum(this.cmd);
 
 		if (id == -1) {
 			System.out.println("게시글 번호를 정확하게 입력해주세요");
@@ -94,13 +120,13 @@ public class ArticleController {
 		System.out.printf("내용 : %s\n", foundArticle.getBody());
 	}
 
-	public void doModify(String cmd) {
+	public void doModify() {
 		if (Session.isLogined() == false) {
 			System.out.println("로그인을 해야만 사용할 수 있는 기능입니다");
 			return;
 		}
 		
-		int id = this.articleService.getCmdNum(cmd);
+		int id = this.articleService.getCmdNum(this.cmd);
 
 		if (id == -1) {
 			System.out.println("게시글 번호를 정확하게 입력해주세요");
@@ -129,18 +155,13 @@ public class ArticleController {
 		System.out.printf("%d번 게시글의 수정이 완료되었습니다\n", id);
 	}
 
-	public void makeTestData() {
-		this.articleService.makeTestData();
-		System.out.println("테스트용 게시글 데이터 5개를 생성했습니다");
-	}
-
-	public void doDelete(String cmd) {
+	public void doDelete() {
 		if (Session.isLogined() == false) {
 			System.out.println("로그인을 해야만 사용할 수 있는 기능입니다");
 			return;
 		}
 		
-		int id = this.articleService.getCmdNum(cmd);
+		int id = this.articleService.getCmdNum(this.cmd);
 
 		if (id == -1) {
 			System.out.println("게시글 번호를 정확하게 입력해주세요");
